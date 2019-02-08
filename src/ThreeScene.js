@@ -5,10 +5,11 @@ import { Button } from 'antd';
 
 
 class ThreeScene extends Component {
-
   constructor(props) {
     super(props);
+    this.myFunc=this.myFunc.bind(this)
     this.animate=this.animate.bind(this)
+    this.state={value:false}
   }
 
   componentDidMount() {
@@ -50,6 +51,19 @@ class ThreeScene extends Component {
   }
 
 
+
+  myFunc(){
+    if (!this.state.value) {
+      var geometryq = new THREE.BoxBufferGeometry( 25, 25, 25 );
+      var materialq =new THREE.PointsMaterial( { color: '#ffa000' } );
+      this.cubeA = new THREE.Mesh( geometryq, materialq );
+
+      this.camera.add(this.cubeA);
+      this.cubeA.position.set(0,1,-50);
+      this.scene.add(this.camera)
+      this.setState({value:true})
+    }
+  }
   onWindowResize =()=> {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
@@ -58,7 +72,10 @@ class ThreeScene extends Component {
 
   animate=()=> {
 		requestAnimationFrame( this.animate );
-    
+    if (this.state.value) {
+      // this.cubeA.rotation.x += 0.005;
+      this.cubeA.rotation.y += 0.01;
+    }
     this.controls.update();
     this.renderer.render( this.scene, this.camera );
 	}
@@ -72,6 +89,7 @@ class ThreeScene extends Component {
           this.mount = mount;
         }}
       >
+        <Button onClick={this.myFunc}  style={{position:'absolute',top:'10%',right:'10%',color:'blue'}}>Generate Cube</Button>
       </div>
     );
   }
