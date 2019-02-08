@@ -8,12 +8,17 @@ class ThreeScene extends Component {
   constructor(props) {
     super(props);
     this.myFunc=this.myFunc.bind(this)
+    this.onDocumentMouseMove=this.onDocumentMouseMove.bind(this)
+    this.getIntersects=this.getIntersects.bind(this)
     this.animate=this.animate.bind(this)
     this.state={value:false}
   }
 
   componentDidMount() {
 
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+    this.selectedObject = null;
 
     const width = this.mount.clientWidth;
     const height = this.mount.clientHeight;
@@ -39,6 +44,7 @@ class ThreeScene extends Component {
     this.cube = new THREE.Mesh(geometry, this.material);
     this.scene.add(this.cube);
 
+    this.raycaster.setFromCamera( this.mouse, this.camera );
 
     //ADD CONTROLS
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
@@ -46,12 +52,37 @@ class ThreeScene extends Component {
     this.controls.enablePan = false;
     this.	controls.enableDamping = true;
     this.controls.rotateSpeed = - 0.25;
+		window.addEventListener( "mousemove", this.onDocumentMouseMove, false );
     window.addEventListener( 'resize', this.onWindowResize, false );
     this.animate()
   }
 
-
-
+  onDocumentMouseMove( event ) {
+    if (this.state.value) {
+      event.preventDefault();
+			if ( this.selectedObject ) {
+				this.selectedObject.material.color.set( '#76ff03' );
+				this.selectedObject = null;
+			}
+			var intersects = this.getIntersects( event.layerX, event.layerY );
+			if ( intersects.length > 0 ) {
+				var res = intersects.filter( function ( res ) {
+					return res && res.object;
+				} )[ 0 ];
+				if ( res && res.object ) {
+					this.selectedObject = res.object;
+          this.selectedObject.material.color.set( '#8bc34a' );
+				}
+			}
+    }
+  }
+  getIntersects( x, y ) {
+		x = ( x / window.innerWidth ) * 2 - 1;
+		y = - ( y / window.innerHeight ) * 2 + 1;
+		this.mouse.set( x, y, 0.5 );
+		this.raycaster.setFromCamera( this.mouse, this.camera );
+		return this.raycaster.intersectObject( this.scene.children[1], true );
+	}
   myFunc(){
     if (!this.state.value) {
       var geometryq = new THREE.BoxBufferGeometry( 25, 25, 25 );
