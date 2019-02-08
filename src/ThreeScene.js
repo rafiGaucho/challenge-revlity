@@ -61,7 +61,7 @@ class ThreeScene extends Component {
     if (this.state.value) {
       event.preventDefault();
 			if ( this.selectedObject ) {
-				this.selectedObject.material.color.set( '#76ff03' );
+				this.selectedObject.material.color.set( '#ffa000' );
 				this.selectedObject = null;
 			}
 			var intersects = this.getIntersects( event.layerX, event.layerY );
@@ -71,7 +71,7 @@ class ThreeScene extends Component {
 				} )[ 0 ];
 				if ( res && res.object ) {
 					this.selectedObject = res.object;
-          this.selectedObject.material.color.set( '#8bc34a' );
+          this.selectedObject.material.color.set( '#1a237e' );
 				}
 			}
     }
