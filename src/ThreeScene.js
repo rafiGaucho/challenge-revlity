@@ -89,9 +89,13 @@ class ThreeScene extends Component {
       var materialq =new THREE.PointsMaterial( { color: '#ffa000' } );
       this.cubeA = new THREE.Mesh( geometryq, materialq );
 
-      this.camera.add(this.cubeA);
-      this.cubeA.position.set(0,1,-50);
-      this.scene.add(this.camera)
+      var vec = new THREE.Vector3( 0, 0, -100 );
+      vec.applyQuaternion( this.camera.quaternion );
+      this.cubeA.position.copy( vec );
+
+      // this.camera.add(this.cubeA);
+      // this.cubeA.position.set(0,1,-50);
+      this.scene.add(this.cubeA)
       this.setState({value:true})
     }
   }
