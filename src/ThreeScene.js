@@ -124,7 +124,9 @@ class ThreeScene extends Component {
           this.mount = mount;
         }}
       >
-        <Button onClick={this.myFunc}  style={{position:'absolute',top:'10%',right:'10%',color:'blue'}}>Generate Cube</Button>
+        {!this.state.value &&
+          <Button onClick={this.myFunc}  style={{position:'absolute',top:'10%',right:'10%',color:'blue'}}>Generate Cube</Button>
+        }
       </div>
     );
   }
